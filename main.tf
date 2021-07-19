@@ -30,7 +30,7 @@ resource "aws_subnet" "myapp-subnet-1" {
   }
 }
 
-# Create Route Table: myapp
+/*# Create Route Table: myapp
 resource "aws_route_table" "myapp_route_table" {
   vpc_id = aws_vpc.myapp-vpc.id
 
@@ -42,7 +42,7 @@ resource "aws_route_table" "myapp_route_table" {
   tags = {
     Name = "${var.env_prefix}-rtb"
   }
-}
+}*/
 
 # Create Internet Gateway: myapp
 resource "aws_internet_gateway" "myapp-igw" {
@@ -134,4 +134,24 @@ resource "aws_default_security_group" "default-sg" {
   tags = {
     Name = "${var.env_prefix}-default-sg"
   }
+}
+
+# Fetch Amazon Machine Image (AMI) for EC2 Instance
+data "aws_ami" "latest-amazon-linux-image" {
+  most_recent      = true
+  owners           = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+output "aws_ami_id" {
+  value = data.aws_ami.latest-amazon-linux-image.id
 }
