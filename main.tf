@@ -180,3 +180,7 @@ resource "aws_instance" "myapp-server" {
       Name = "${var.env_prefix}-server"
   }
 }
+
+output "ec2_public_ip" {
+  value = aws_instance.myapp-server.public_ip
+}
