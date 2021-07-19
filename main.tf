@@ -161,7 +161,7 @@ output "aws_ami_id" {
 # Create Key Pair
 resource "aws_key_pair" "zu1u-celestialorrery" {
   key_name   = "zu1u-celestialorrery-key"
-  public_key = "${file(var.public_key_location)}"
+  public_key = file(var.public_key_location)
 }
 
 # Create EC2 Instance
