@@ -119,7 +119,7 @@ resource "aws_instance" "myapp-server" {
   ami = data.aws_ami.latest-amazon-linux-image.id
   instance_type = var.instance_type
 
-  subnet_id = "module.myapp-subnet.subnet.id"
+  subnet_id = module.myapp-subnet.subnet.id
   vpc_security_group_ids = [aws_default_security_group.default-sg.id]
   availability_zone = var.avail_zone
 
