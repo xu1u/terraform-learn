@@ -1,4 +1,5 @@
 # Local .terraform Directory
+**/.terraform/*
 .terraform/*
 .terraform*
 
@@ -8,3 +9,13 @@
 
 # Terraform Variable Files, may include sensitive data
 *.tfvars
+
+# CLI Configurations
+.terraformrc
+terraform.rc
+
+# Ingore Mac/OSX system file, with the folder metada
+.DS_Store
+
+# Ignore Crash Log File
+crash.log

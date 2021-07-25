@@ -23,113 +23,15 @@ module "myapp-subnet" {
 
 }
 
-/*# Create Security Group for Firewall Configuration
-resource "aws_security_group" "myapp-sg" {
-  name        = "myapp-sg"
-  description = "Security Group for myapp-sg"
-  vpc_id      = aws_vpc.myapp-vpc.id
+module "myapp-server" {
+  source = "./modules/webserver"
 
-  ingress {
-    description      = "SSH from VPC"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = [var.my_ip]
-  }
-
-  ingress {
-    description      = "HTTP from VPC"
-    from_port        = 8080
-    to_port          = 8080
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-    prefix_list_ids = []
-  }
-
-  tags = {
-    Name = "${var.env_prefix}-sg"
-  }
-}*/
-
-# Use AWS Default Components: Default Route Table
-resource "aws_default_security_group" "default-sg" {
-  vpc_id      = aws_vpc.myapp-vpc.id
-
-  ingress {
-    description      = "SSH from VPC"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = [var.my_ip]
-  }
-
-  ingress {
-    description      = "HTTP from VPC"
-    from_port        = 8080
-    to_port          = 8080
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-    prefix_list_ids = []
-  }
-
-  tags = {
-    Name = "${var.env_prefix}-default-sg"
-  }
-}
-
-# Fetch Amazon Machine Image (AMI) for EC2 Instance
-data "aws_ami" "latest-amazon-linux-image" {
-  most_recent      = true
-  owners           = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-# Create Key Pair
-resource "aws_key_pair" "zu1u-celestialorrery" {
-  key_name   = "zu1u-celestialorrery-key"
-  public_key = file(var.public_key_location)
-}
-
-# Create EC2 Instance
-resource "aws_instance" "myapp-server" {
-  ami = data.aws_ami.latest-amazon-linux-image.id
+  vpc_id = aws_vpc.myapp-vpc.id
+  my_ip = var.my_ip
+  env_prefix = var.env_prefix
+  image_name = var.image_name
+  public_key_location = var.public_key_location
   instance_type = var.instance_type
-
   subnet_id = module.myapp-subnet.subnet.id
-  vpc_security_group_ids = [aws_default_security_group.default-sg.id]
-  availability_zone = var.avail_zone
-
-  associate_public_ip_address = true
-  key_name = aws_key_pair.zu1u-celestialorrery.key_name
-
-  user_data = file("entry-script.sh")
-
-  tags = {
-      Name = "${var.env_prefix}-server"
-  }
+  avail_zone = var.avail_zone
 }
