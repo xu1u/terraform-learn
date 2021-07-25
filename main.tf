@@ -1,3 +1,13 @@
+# Configure Terraform Remote Storage AWS Store
+terraform {
+  required_version = ">= 0.12"
+  backend "s3" {
+    bucket = "zu1umyapp"
+    key = "myapp/state.tfstate"
+    region = "eu-central-1"
+  }
+}
+
 # Configure the AWS Provider
 provider "aws" {
   region = "eu-central-1"
