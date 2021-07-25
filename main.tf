@@ -12,6 +12,7 @@ resource "aws_vpc" "myapp-vpc" {
   }
 }
 
+# Call Subnet Module in /modules/subnet directory
 module "myapp-subnet" {
   source = "./modules/subnet"
   subnet_cidr_block = var.subnet_cidr_block
